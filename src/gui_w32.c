@@ -110,23 +110,23 @@ static void keycode_trans_strategy_init(void)
     // set default value as fallback
     keycode_trans_strategy_used = &keycode_trans_strategy_classic;
 
-    strategy = getenv("VIM_KEYCODE_TRANS_STRATEGY");
-    if (strategy == NULL)
-    {
-	return;
-    }
+    // strategy = getenv("VIM_KEYCODE_TRANS_STRATEGY");
+    // if (strategy == NULL)
+    // {
+	// return;
+    // }
 
-    if (STRICMP(strategy, "classic") == 0)
-    {
-	keycode_trans_strategy_used = &keycode_trans_strategy_classic;
-	return;
-    }
+    // if (STRICMP(strategy, "classic") == 0)
+    // {
+	// keycode_trans_strategy_used = &keycode_trans_strategy_classic;
+	// return;
+    // }
 
-    if (STRICMP(strategy, "experimental") == 0)
-    {
+    // if (STRICMP(strategy, "experimental") == 0)
+    // {
 	keycode_trans_strategy_used = &keycode_trans_strategy_experimental;
 	return;
-    }
+    // }
 
 }
 
@@ -1033,11 +1033,11 @@ _OnChar_classic(
     dead_key = 0;
 
     len = char_to_string(ch, string, 40, FALSE);
-    if (len == 1 && string[0] == Ctrl_C && ctrl_c_interrupts)
-    {
-	trash_input_buf();
-	got_int = TRUE;
-    }
+    // if (len == 1 && string[0] == Ctrl_C && ctrl_c_interrupts)
+    // {
+	// trash_input_buf();
+	// got_int = TRUE;
+    // }
 
     add_to_input_buf(string, len);
 }

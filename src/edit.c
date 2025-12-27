@@ -797,14 +797,16 @@ edit(
 	c = do_digraph(c);
 #endif
 
-	if ((c == Ctrl_V || c == Ctrl_Q) && ctrl_x_mode_cmdline())
-	    goto docomplete;
-	if (c == Ctrl_V || c == Ctrl_Q)
-	{
-	    ins_ctrl_v();
-	    c = Ctrl_V;	// pretend CTRL-V is last typed character
-	    continue;
-	}
+    if (mod_mask == 0) {
+        if ((c == Ctrl_V || c == Ctrl_Q) && ctrl_x_mode_cmdline())
+            goto docomplete;
+        if (c == Ctrl_V || c == Ctrl_Q)
+        {
+            ins_ctrl_v();
+            c = Ctrl_V;	// pretend CTRL-V is last typed character
+            continue;
+        }
+    }
 
 	if (cindent_on() && ctrl_x_mode_none())
 	{
@@ -978,6 +980,13 @@ doESCkey:
 	    if (stuff_inserted(NUL, 1L, (c == Ctrl_A)) == FAIL
 						   && c != Ctrl_A && !p_im)
 		goto doESCkey;		// quit insert mode
+	    inserted_space = FALSE;
+	    break;
+
+	case Ctrl_V:	// insert the contents of a register
+	    // ins_reg();
+		insert_reg('+', false);
+	    auto_format(FALSE, TRUE);
 	    inserted_space = FALSE;
 	    break;
 

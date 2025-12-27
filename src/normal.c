@@ -6463,6 +6463,11 @@ nv_operator(cmdarg_T *cap)
 {
     int	    op_type;
 
+    if (cap->cmdchar == Ctrl_C) {
+        cap->oap->regname = '+';
+        set_reg_var('+');
+    }
+
     op_type = get_op_type(cap->cmdchar, cap->nchar);
 #ifdef FEAT_JOB_CHANNEL
     if (bt_prompt(curbuf) && op_is_change(op_type) && !prompt_curpos_editable())

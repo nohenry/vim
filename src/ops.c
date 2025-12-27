@@ -62,6 +62,7 @@ static const char opchars[][3] =
     {'g', '@', OPF_CHANGE},		// OP_FUNCTION
     {Ctrl_A, NUL, OPF_CHANGE},		// OP_NR_ADD
     {Ctrl_X, NUL, OPF_CHANGE},		// OP_NR_SUB
+    {Ctrl_C, NUL, 0},			// OP_YANK
 };
 
 /*
@@ -82,6 +83,8 @@ get_op_type(int char1, int char2)
     if (char1 == 'g' && char2 == Ctrl_X)	// subtract
 	return OP_NR_SUB;
     if (char1 == 'z' && char2 == 'y')	// OP_YANK
+	return OP_YANK;
+    if (char1 == Ctrl_C)	// OP_YANK
 	return OP_YANK;
     for (i = 0; ; ++i)
     {
