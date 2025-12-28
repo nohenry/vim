@@ -166,6 +166,8 @@ edit(
     int		cursor_line_was_concealed;
 #endif
     int		ins_just_started = TRUE;
+    int     old_p_paste;
+    int     reset_p_paste = 0;
 
     // Remember whether editing was restarted after CTRL-O.
     did_restart_edit = restart_edit;
@@ -798,9 +800,9 @@ edit(
 #endif
 
     if (mod_mask == 0) {
-        if ((c == Ctrl_V || c == Ctrl_Q) && ctrl_x_mode_cmdline())
+        if (c == Ctrl_Q && ctrl_x_mode_cmdline())
             goto docomplete;
-        if (c == Ctrl_V || c == Ctrl_Q)
+        if (c == Ctrl_Q)
         {
             ins_ctrl_v();
             c = Ctrl_V;	// pretend CTRL-V is last typed character
@@ -900,6 +902,11 @@ doESCkey:
 	    // still puts the cursor back after the inserted text.
 	    if (ins_at_eol && gchar_cursor() == NUL)
 		o_lnum = curwin->w_cursor.lnum;
+        
+        if (reset_p_paste) {
+            p_paste = old_p_paste;
+            reset_p_paste = 0;
+        }
 
 	    if (ins_esc(&count, cmdchar, nomove))
 	    {
@@ -983,12 +990,17 @@ doESCkey:
 	    inserted_space = FALSE;
 	    break;
 
-	case Ctrl_V:	// insert the contents of a register
-	    // ins_reg();
-		insert_reg('+', false);
-	    auto_format(FALSE, TRUE);
+	case Ctrl_V: {	// insert the contents of a register
+        old_p_paste = p_paste;
+        p_paste = 1;
+        reset_p_paste++;
+
+		insert_reg('+', FALSE);
+
+	    // auto_format(FALSE, TRUE);
+
 	    inserted_space = FALSE;
-	    break;
+    } break;
 
 	case Ctrl_R:	// insert the contents of a register
 	    if (ctrl_x_mode_register() && !ins_compl_active())
